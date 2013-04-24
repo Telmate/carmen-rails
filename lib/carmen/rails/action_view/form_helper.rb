@@ -83,6 +83,11 @@ module ActionView
         options.stringify_keys!
         priority_region_codes = options['priority'] || []
         region_options = ""
+        prompt = options.delete('prompt')
+        if prompt
+          region_options += "<option>#{prompt}</option>"
+          region_options += "<option disabled>-------------</option>"
+        end
 
         unless priority_region_codes.empty?
           unless regions.respond_to?(:coded)
@@ -101,7 +106,7 @@ module ActionView
 
         main_options = regions.map { |r| [r.name, r.code] }
         main_options.sort!{|a, b| a.first.to_s <=> b.first.to_s}
-        main_options.unshift [options['prompt'], ''] if options['prompt']
+        # main_options.unshift [options['prompt'], ''] if options['prompt']
 
         region_options += options_for_select(main_options, selected)
         region_options.html_safe
